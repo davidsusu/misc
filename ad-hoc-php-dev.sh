@@ -15,6 +15,7 @@ mkdir "${TARGET_DIR}/home"
 mkdir "${TARGET_DIR}/bin"
 
 echo '#!/bin/sh' > "${TARGET_DIR}/bin/php"
+echo '# see: https://github.com/php/frankenphp/pull/610/commits/c6c9dccc457ce5fc3d3de5a731823dad69630434' >> "${TARGET_DIR}/bin/php"
 echo 'for arg in "$@"; do' >> "${TARGET_DIR}/bin/php"
 echo '    if [ "$arg" = "-d" ]; then' >> "${TARGET_DIR}/bin/php"
 echo '        shift; shift' >> "${TARGET_DIR}/bin/php"
