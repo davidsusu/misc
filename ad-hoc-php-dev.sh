@@ -9,10 +9,10 @@ if [ -z "$TARGET_DIR" ]; then
 fi
 
 mkdir -p "$TARGET_DIR"
-
 mkdir "${TARGET_DIR}/home"
-
 mkdir "${TARGET_DIR}/bin"
+
+export HOME="${TARGET_DIR}/home"
 
 echo '#!/bin/sh' > "${TARGET_DIR}/bin/php"
 echo '# see: https://github.com/php/frankenphp/pull/610/commits/c6c9dccc457ce5fc3d3de5a731823dad69630434' >> "${TARGET_DIR}/bin/php"
@@ -25,16 +25,21 @@ echo 'selfDir="$( dirname -- "$( realpath -- "$0" )" )"' >> "${TARGET_DIR}/bin/p
 echo '"${selfDir}/../frankenphp/frankenphp" php-cli "$@"' >> "${TARGET_DIR}/bin/php"
 chmod +x "${TARGET_DIR}/bin/php"
 
+export PHP_BINARY="${TARGET_DIR}/bin/php"
+
 mkdir "${TARGET_DIR}/dev-base"
 
 echo '#!/bin/sh' > "${TARGET_DIR}/dev-base/prepare.sh"
+echo "export HOME='${TARGET_DIR}/home'" >> "${TARGET_DIR}/dev-base/prepare.sh"
 echo "export PHP_BINARY='${TARGET_DIR}/bin/php'" >> "${TARGET_DIR}/dev-base/prepare.sh"
+echo 'if [ ! -e .env ] && [ -f .env.example ]; then cp .env.example .env; fi' >> "${TARGET_DIR}/dev-base/prepare.sh"
 echo '../bin/php ../composer/composer.phar install' >> "${TARGET_DIR}/dev-base/prepare.sh"
 echo 'touch database/database.sqlite' >> "${TARGET_DIR}/dev-base/prepare.sh"
 echo '../bin/php artisan migrate:fresh --force --seed' >> "${TARGET_DIR}/dev-base/prepare.sh"
 chmod +x "${TARGET_DIR}/dev-base/prepare.sh"
 
 echo '#!/bin/sh' > "${TARGET_DIR}/dev-base/serve.sh"
+echo "export PHP_BINARY='${TARGET_DIR}/bin/php'" >> "${TARGET_DIR}/dev-base/serve.sh"
 echo '../frankenphp/frankenphp php-server --listen :8888 --root public' >> "${TARGET_DIR}/dev-base/serve.sh"
 chmod +x "${TARGET_DIR}/dev-base/serve.sh"
 
