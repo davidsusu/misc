@@ -30,7 +30,7 @@ echo '#!/bin/sh' > "${TARGET_DIR}/dev-base/prepare.sh"
 echo "export PHP_BINARY='${TARGET_DIR}/bin/php'" >> "${TARGET_DIR}/dev-base/prepare.sh"
 echo '../bin/php ../composer/composer.phar install' >> "${TARGET_DIR}/dev-base/prepare.sh"
 echo 'touch database/database.sqlite' >> "${TARGET_DIR}/dev-base/prepare.sh"
-echo '../bin/php artisan migrate:fresh --force' >> "${TARGET_DIR}/dev-base/prepare.sh"
+echo '../bin/php artisan migrate:fresh --force --seed' >> "${TARGET_DIR}/dev-base/prepare.sh"
 chmod +x "${TARGET_DIR}/dev-base/prepare.sh"
 
 echo '#!/bin/sh' > "${TARGET_DIR}/dev-base/serve.sh"
